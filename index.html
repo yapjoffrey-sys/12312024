@@ -1,4 +1,12 @@
-Here’s the full updated code with all the suggestions we discussed — countdown with typewriter effect, blinking cursor, smooth transition from green matrix rain to pink hearts, and the secret love message reveal. You can copy-paste this directly:
+Great idea — let’s make your project fully responsive so it auto-adjusts for both laptops and cellphones. Right now, the canvas and layout are fixed to the window size, but we can enhance it with CSS and JavaScript so everything scales smoothly.
+
+🔧 Key Changes
+- Responsive canvas: Already handled with window.addEventListener("resize", ...).
+- Responsive text and inputs: Use relative units (vw, vh, %) instead of fixed pixels.
+- Media queries: Adjust font sizes and spacing for smaller screens.
+- Flexible image scaling: Ensure the love image resizes nicely on mobile.
+
+✅ Full Updated Code (copy-paste ready)
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,24 +37,33 @@ canvas {
 .container {
   z-index: 2;
   text-align: center;
+  width: 90%;
+  max-width: 500px;
+}
+
+h2 {
+  font-size: 5vw;
 }
 
 input {
   background: black;
   border: 1px solid #00ff00;
   color: #00ff00;
-  padding: 10px;
-  font-size: 1.1em;
+  padding: 2vh 2vw;
+  font-size: 4vw;
   outline: none;
+  width: 60%;
+  max-width: 250px;
 }
 
 button {
   background: #00ff00;
   border: none;
-  padding: 10px 20px;
+  padding: 2vh 3vw;
   margin-left: 10px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 4vw;
 }
 
 button:hover {
@@ -56,6 +73,7 @@ button:hover {
 #message {
   margin-top: 20px;
   white-space: pre-line;
+  font-size: 4vw;
 }
 
 #message::after {
@@ -74,16 +92,18 @@ button:hover {
   text-align: center;
   color: white;
   z-index: 2;
+  width: 90%;
 }
 
 .love-text {
-  font-size: 2em;
+  font-size: 6vw;
   margin-top: 20px;
   text-shadow: 0 0 10px pink, 0 0 20px red;
 }
 
 .love-image {
-  width: 280px;
+  width: 70%;
+  max-width: 300px;
   border-radius: 20px;
   margin-top: 20px;
   opacity: 0;
@@ -95,6 +115,14 @@ button:hover {
 .love-image.show {
   opacity: 1;
   transform: scale(1);
+}
+
+/* 📱 Mobile adjustments */
+@media (max-width: 600px) {
+  h2 { font-size: 6vw; }
+  input, button { font-size: 5vw; }
+  #message { font-size: 5vw; }
+  .love-text { font-size: 7vw; }
 }
 </style>
 </head>
@@ -121,20 +149,24 @@ button:hover {
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-
-window.addEventListener("resize", () => {
+function resizeCanvas() {
   canvas.height = window.innerHeight;
   canvas.width = window.innerWidth;
-});
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 const letters = "01";
 const fontSize = 14;
-const columns = canvas.width / fontSize;
-const drops = [];
+let columns = canvas.width / fontSize;
+let drops = [];
 
-for (let x = 0; x < columns; x++) drops[x] = 1;
+function initDrops() {
+  columns = canvas.width / fontSize;
+  drops = [];
+  for (let x = 0; x < columns; x++) drops[x] = 1;
+}
+initDrops();
 
 function drawMatrix() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
@@ -262,10 +294,8 @@ function runHeartRain() {
 
 
 
-✨ Features included:
-- Responsive canvas (resizes with window).
-- Countdown with typewriter effect + blinking cursor.
-- Smooth fade transition from green matrix rain to pink hearts.
-- Secret love message + glowing image reveal.
-This is now a complete, copy-paste ready project.
-Would you like me to also add a background audio trigger (like soft romantic music or heartbeat sound) when the hearts start falling, so it feels even more immersive?
+✨ Now your project:
+- Auto-adjusts for laptops and cellphones (responsive fonts, inputs, and image).
+- Matrix rain resizes dynamically when the screen changes.
+- Secret content scales nicely on mobile.
+Would you like me to also add a “tap anywhere to restart” feature
