@@ -1,3 +1,5 @@
+Got it — you want the rain effect to stay original green Matrix style instead of switching to pink hearts. That’s easy: we’ll remove the heart rain transition and keep the green code rain running even after the countdown finishes.
+Here’s your full updated copy‑paste code with auto‑adjust and green rain preserved:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,6 +86,11 @@ button:hover {
   color: white;
   z-index: 2;
   width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .love-text {
@@ -115,6 +122,13 @@ button:hover {
   #message { font-size: 5vw; }
   .love-text { font-size: 7vw; }
 }
+
+@media (max-width: 400px) {
+  .love-image {
+    width: 90%;
+    max-width: 220px;
+  }
+}
 </style>
 </head>
 
@@ -140,16 +154,8 @@ button:hover {
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
-function resizeCanvas() {
-  canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-
-const letters = "01";
-const fontSize = 14;
-let columns = canvas.width / fontSize;
+let fontSize;
+let columns;
 let drops = [];
 
 function initDrops() {
@@ -157,7 +163,16 @@ function initDrops() {
   drops = [];
   for (let x = 0; x < columns; x++) drops[x] = 1;
 }
-initDrops();
+
+function resizeCanvas() {
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  fontSize = Math.max(window.innerWidth * 0.015, 12); // responsive font size
+  initDrops();
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 function drawMatrix() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
@@ -167,7 +182,7 @@ function drawMatrix() {
   ctx.font = fontSize + "px monospace";
 
   for (let i = 0; i < drops.length; i++) {
-    const text = letters.charAt(Math.floor(Math.random() * letters.length));
+    const text = "01".charAt(Math.floor(Math.random() * 2));
     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
     if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
@@ -177,7 +192,7 @@ function drawMatrix() {
   }
 }
 
-let matrixInterval = setInterval(drawMatrix, 33);
+setInterval(drawMatrix, 33);
 
 // PASSWORD + COUNTDOWN
 function checkPassword() {
@@ -200,7 +215,7 @@ function checkPassword() {
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("secretContent").style.display = "block";
         showLoveMessage();
-        startHeartRainSmooth(); // smooth transition to hearts
+        // keep green rain running (no heart rain)
       }
     }, 1000);
   } else {
@@ -233,52 +248,12 @@ function showLoveMessage() {
     pic.classList.add("show");
   }, 2500);
 }
-
-// HEART RAIN TRANSITION
-function startHeartRainSmooth() {
-  clearInterval(matrixInterval); // stop green rain
-  let opacity = 1;
-  const fadeInterval = setInterval(() => {
-    opacity -= 0.05;
-    ctx.fillStyle = `rgba(0, 0, 0, ${1 - opacity})`;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (opacity <= 0) {
-      clearInterval(fadeInterval);
-      runHeartRain();
-    }
-  }, 100);
-}
-
-function runHeartRain() {
-  const heartLetters = "💖💕💓💗💞💘";
-  const fontSize = 20;
-  const columns = canvas.width / fontSize;
-  const drops = [];
-
-  for (let x = 0; x < columns; x++) drops[x] = 1;
-
-  function drawHearts() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "pink";
-    ctx.font = fontSize + "px monospace";
-
-    for (let i = 0; i < drops.length; i++) {
-      const text = heartLetters.charAt(Math.floor(Math.random() * heartLetters.length));
-      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      drops[i]++;
-    }
-  }
-
-  setInterval(drawHearts, 50);
-}
 </script>
 
 </body>
 </html>
+
+
+
+✨ Now the rain stays classic green Matrix style even after the countdown finishes, while the secret love message and image appear on top.
+Would you like me to add a restart button/tap anywhere to reset so you can loop back to the login screen after the love message?
