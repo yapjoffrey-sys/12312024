@@ -1,3 +1,4 @@
+Here’s the full updated code with all the suggestions we discussed — countdown with typewriter effect, blinking cursor, smooth transition from green matrix rain to pink hearts, and the secret love message reveal. You can copy-paste this directly:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,6 +55,18 @@ button:hover {
 
 #message {
   margin-top: 20px;
+  white-space: pre-line;
+}
+
+#message::after {
+  content: "_";
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 #secretContent {
@@ -111,6 +124,11 @@ const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 
+window.addEventListener("resize", () => {
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+});
+
 const letters = "01";
 const fontSize = 14;
 const columns = canvas.width / fontSize;
@@ -118,7 +136,7 @@ const drops = [];
 
 for (let x = 0; x < columns; x++) drops[x] = 1;
 
-function draw() {
+function drawMatrix() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -136,20 +154,31 @@ function draw() {
   }
 }
 
-setInterval(draw, 33);
+let matrixInterval = setInterval(drawMatrix, 33);
 
-// PASSWORD
+// PASSWORD + COUNTDOWN
 function checkPassword() {
   const correctPassword = "12312024";
   const input = document.getElementById("passwordInput").value;
   const message = document.getElementById("message");
 
   if (input === correctPassword) {
-    message.innerHTML = "> ACCESS GRANTED...";
-    setTimeout(() => {
-      document.getElementById("loginBox").style.display = "none";
-      document.getElementById("secretContent").style.display = "block";
-      showLoveMessage();
+    let countdown = 5; // seconds
+    message.innerHTML = "";
+    typeWriter(`> ACCESS GRANTED...\nInitiating in ${countdown}`, message, 50);
+
+    const interval = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        message.innerHTML = "";
+        typeWriter(`> ACCESS GRANTED...\nInitiating in ${countdown}`, message, 50);
+      } else {
+        clearInterval(interval);
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("secretContent").style.display = "block";
+        showLoveMessage();
+        startHeartRainSmooth(); // smooth transition to hearts
+      }
     }, 1000);
   } else {
     message.innerHTML = "> ACCESS DENIED ❌";
@@ -181,7 +210,62 @@ function showLoveMessage() {
     pic.classList.add("show");
   }, 2500);
 }
+
+// HEART RAIN TRANSITION
+function startHeartRainSmooth() {
+  clearInterval(matrixInterval); // stop green rain
+  let opacity = 1;
+  const fadeInterval = setInterval(() => {
+    opacity -= 0.05;
+    ctx.fillStyle = `rgba(0, 0, 0, ${1 - opacity})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (opacity <= 0) {
+      clearInterval(fadeInterval);
+      runHeartRain();
+    }
+  }, 100);
+}
+
+function runHeartRain() {
+  const heartLetters = "💖💕💓💗💞💘";
+  const fontSize = 20;
+  const columns = canvas.width / fontSize;
+  const drops = [];
+
+  for (let x = 0; x < columns; x++) drops[x] = 1;
+
+  function drawHearts() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "pink";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = heartLetters.charAt(Math.floor(Math.random() * heartLetters.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawHearts, 50);
+}
 </script>
 
 </body>
 </html>
+
+
+
+✨ Features included:
+- Responsive canvas (resizes with window).
+- Countdown with typewriter effect + blinking cursor.
+- Smooth fade transition from green matrix rain to pink hearts.
+- Secret love message + glowing image reveal.
+This is now a complete, copy-paste ready project.
+Would you like me to also add a background audio trigger (like soft romantic music or heartbeat sound) when the hearts start falling, so it feels even more immersive?
