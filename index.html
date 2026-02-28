@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Secure Access</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: black;
+  color: #00ff00;
+  font-family: "Courier New", monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.container {
+  z-index: 2;
+  text-align: center;
+}
+
+input {
+  background: black;
+  border: 1px solid #00ff00;
+  color: #00ff00;
+  padding: 10px;
+  font-size: 1.1em;
+  outline: none;
+}
+
+button {
+  background: #00ff00;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: lime;
+}
+
+#message {
+  margin-top: 20px;
+}
+
+#secretContent {
+  display: none;
+  text-align: center;
+  color: white;
+  z-index: 2;
+}
+
+.love-text {
+  font-size: 2em;
+  margin-top: 20px;
+  text-shadow: 0 0 10px pink, 0 0 20px red;
+}
+
+.love-image {
+  width: 280px;
+  border-radius: 20px;
+  margin-top: 20px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: 1s;
+  box-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
+}
+
+.love-image.show {
+  opacity: 1;
+  transform: scale(1);
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container" id="loginBox">
+  <h2>> ENTER ACCESS CODE</h2>
+  <input type="password" id="passwordInput" placeholder="********">
+  <button onclick="checkPassword()">LOGIN</button>
+  <div id="message"></div>
+</div>
+
+<div id="secretContent">
+  <h1>ACCESS GRANTED 💚</h1>
+  <div class="love-text" id="loveMsg"></div>
+  <img src="love.jpg" id="lovePic" class="love-image">
+</div>
+
+<script>
+// MATRIX EFFECT
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "01";
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = [];
+
+for (let x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#0F0";
+  ctx.font = fontSize + "px monospace";
+
+  for (let i = 0; i < drops.length; i++) {
+    const text = letters.charAt(Math.floor(Math.random() * letters.length));
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+// PASSWORD
+function checkPassword() {
+  const correctPassword = "12312024";
+  const input = document.getElementById("passwordInput").value;
+  const message = document.getElementById("message");
+
+  if (input === correctPassword) {
+    message.innerHTML = "> ACCESS GRANTED...";
+    setTimeout(() => {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("secretContent").style.display = "block";
+      showLoveMessage();
+    }, 1000);
+  } else {
+    message.innerHTML = "> ACCESS DENIED ❌";
+  }
+}
+
+// TYPEWRITER
+function typeWriter(text, element, speed=70) {
+  let i = 0;
+  function typing() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    }
+  }
+  typing();
+}
+
+function showLoveMessage() {
+  const msg = document.getElementById("loveMsg");
+  const pic = document.getElementById("lovePic");
+
+  msg.innerHTML = "";
+  const text = "SYSTEM OVERRIDE...\nLOVE PROTOCOL ACTIVATED 💕\nI miss you. I love you ❤️";
+  typeWriter(text, msg, 70);
+
+  setTimeout(() => {
+    pic.classList.add("show");
+  }, 2500);
+}
+</script>
+
+</body>
+</html>
