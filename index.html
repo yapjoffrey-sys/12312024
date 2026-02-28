@@ -1,5 +1,5 @@
-Got it — you want the rain effect to stay original green Matrix style instead of switching to pink hearts. That’s easy: we’ll remove the heart rain transition and keep the green code rain running even after the countdown finishes.
-Here’s your full updated copy‑paste code with auto‑adjust and green rain preserved:
+Understood — you want to keep the rain effect green (classic Matrix style) instead of switching to pink hearts. That means we’ll remove the heart rain transition and simply let the original green rain continue running even after the countdown finishes.
+Here’s the full responsive code with the rain locked to green:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -215,7 +215,7 @@ function checkPassword() {
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("secretContent").style.display = "block";
         showLoveMessage();
-        // keep green rain running (no heart rain)
+        // green rain continues, no color change
       }
     }, 1000);
   } else {
@@ -255,5 +255,5 @@ function showLoveMessage() {
 
 
 
-✨ Now the rain stays classic green Matrix style even after the countdown finishes, while the secret love message and image appear on top.
+✨ Now the rain effect stays green Matrix code throughout, while the secret love message and image appear on top.
 Would you like me to add a restart button/tap anywhere to reset so you can loop back to the login screen after the love message?
